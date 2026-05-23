@@ -53,6 +53,46 @@ const TIPS = {
   ],
 };
 
+
+// ── ייצוא לאקסל ──────────────────────────────────────────────────
+const exportToExcel = (data, year) => {
+  const rows = [
+    ["חודש", "הכנסות", "הוצאות", "רווח נקי", "מס שנדרש (25%)", "מס ששולם", "חויב", "נגבה"],
+    ...data.map(d => [
+      d.month,
+      d.income,
+      d.expenses,
+      d.income - d.expenses,
+      Math.round((d.income - d.expenses) * 0.25),
+      d.taxPaid,
+      d.invoiced,
+      d.collected,
+    ]),
+    [],
+    ["סיכום שנתי", "", "", "", "", "", "", ""],
+    ["סה״כ הכנסות", data.reduce((s,d)=>s+d.income,0), "", "", "", "", "", ""],
+    ["סה״כ הוצאות", data.reduce((s,d)=>s+d.expenses,0), "", "", "", "", "", ""],
+    ["רווח שנתי", data.reduce((s,d)=>s+d.income-d.expenses,0), "", "", "", "", "", ""],
+    ["מס שנדרש", Math.round(data.reduce((s,d)=>s+d.income-d.expenses,0)*0.25), "", "", "", "", "", ""],
+    ["מס ששולם", data.reduce((s,d)=>s+d.taxPaid,0), "", "", "", "", "", ""],
+  ];
+
+  // Build CSV with BOM for Hebrew support in Excel
+  const bom = "﻿";
+  const csv = bom + rows.map(row =>
+    row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+  ).join("
+");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `דשבורד_פיננסי_${year}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
 const TAG_COLORS = {
   "מס":"#f59e0b","צמיחה":"#3b82f6","גבייה":"#10b981","דחוף":"#ef4444"
 };
@@ -261,7 +301,8 @@ export default function App() {
             ))}
           </div>
           <button onClick={openEdit} style={{padding:"6px 14px",borderRadius:10,border:"2px solid #1d4ed8",background:"transparent",color:"#1d4ed8",fontFamily:"'Heebo',sans-serif",fontWeight:800,fontSize:12,cursor:"pointer"}}>✏️ עדכן</button>
-          <button onClick={()=>{localStorage.clear();setData(seed());}} style={{padding:"6px 14px",borderRadius:10,border:"2px solid #ef4444",background:"transparent",color:"#ef4444",fontFamily:"'Heebo',sans-serif",fontWeight:700,fontSize:12,cursor:"pointer"}}>🗑️ אפס</button>
+          <button onClick={()=>exportToExcel(data, new Date().getFullYear())} style={{padding:"6px 14px",borderRadius:10,border:"2px solid #10b981",background:"transparent",color:"#10b981",fontFamily:"'Heebo',sans-serif",fontWeight:700,fontSize:12,cursor:"pointer"}}>📥 ייצא לאקסל</button>
+          <button onClick={()=>{exportToExcel(data, new Date().getFullYear());localStorage.clear();setData(seed());}} style={{padding:"6px 14px",borderRadius:10,border:"2px solid #ef4444",background:"transparent",color:"#ef4444",fontFamily:"'Heebo',sans-serif",fontWeight:700,fontSize:12,cursor:"pointer"}}>🗑️ אפס שנה</button>
         </div>
 
         {/* ════ DASHBOARD ════ */}
