@@ -1,0 +1,47 @@
+{
+  "name": "דשבורד פיננסי – עוסק פטור",
+  "short_name": "דשבורד כספי",
+  "description": "ניהול פיננסי חכם לעוסק פטור – הכנסות, הוצאות, מיסים וגבייה",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f4ff",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "productivity", "business"],
+  "shortcuts": [
+    {
+      "name": "דשבורד",
+      "short_name": "דשבורד",
+      "description": "פתח את לוח הבקרה הראשי",
+      "url": "/?tab=dashboard"
+    },
+    {
+      "name": "עדכון חודשי",
+      "short_name": "עדכון",
+      "description": "עדכן נתוני החודש",
+      "url": "/?tab=dashboard&edit=true"
+    },
+    {
+      "name": "מצב גבייה",
+      "short_name": "גבייה",
+      "description": "בדוק מצב גבייה",
+      "url": "/?tab=collection"
+    }
+  ]
+}
